@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore four regions and browse a directory of countries, cities, and places.">
+  <meta name="theme-color" content="#203d32">
+  <title>Atlas &amp; Away — The Travel Journal</title>
+  <link rel="icon" href="assets/compass.svg" type="image/svg+xml">
+  <link rel="preload" as="font" href="assets/fonts/fraunces-normal.woff2"
+    type="font/woff2" crossorigin>
+  <style>
+    /* Local fonts keep both pages readable and consistent offline. */
+    @font-face {
+      font-family: 'DM Sans'; src: url('assets/fonts/dm-sans.woff2') format('woff2');
+      font-weight: 400 700; font-display: swap;
+    }
+    @font-face {
+      font-family: Fraunces;
+      src: url('assets/fonts/fraunces-normal.woff2') format('woff2');
+      font-weight: 400 600; font-display: swap;
+    }
+    @font-face {
+      font-family: Fraunces;
+      src: url('assets/fonts/fraunces-italic.woff2') format('woff2');
+      font-weight: 400 600; font-style: italic; font-display: swap;
+    }
+    :root {
+      --paper: #faf7ef; --white: #fffdf8; --pine: #203d32; --ink: #242d27;
+      --muted: #525e54; --rust: #984735; --line: #d8d4c4; --focus: #a24726;
+      --serif: Fraunces, Georgia, serif; --sans: 'DM Sans', Arial, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font: 400 1rem/1.6 var(--sans); color: var(--ink); background: var(--paper); }
+    h1, h2, h3 { margin: 0; font: 500 2rem/1.06 var(--serif); color: var(--pine); }
+    p { margin: 0; }
+    a { color: inherit; text-underline-offset: .22em; }
+    img { display: block; max-width: 100%; }
+    [id] { scroll-margin-top: 1.3rem; }
+    :focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+    .shell { width: min(calc(100% - 3.5rem), 72rem); margin-inline: auto; }
+    .eyebrow {
+      font-size: .72rem; font-weight: 700; letter-spacing: .17em;
+      text-transform: uppercase; color: var(--rust);
+    }
+    .skip-link {
+      position: absolute; z-index: 4; top: .65rem; left: .65rem;
+      transform: translateY(-160%); background: var(--white); color: var(--pine);
+      padding: .55rem .9rem; border-radius: .25rem; font-weight: 700;
+    }
+    .skip-link:focus { transform: none; }
+    .site-header { background: var(--white); border-bottom: 1px solid var(--line); }
+    .header-inner {
+      min-height: 4.75rem; display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: .35rem 1rem;
+    }
+    .brand {
+      display: inline-flex; align-items: center; gap: .65rem; text-decoration: none;
+      color: var(--pine); font: 600 1.4rem/1 var(--serif); white-space: nowrap;
+    }
+    .brand small {
+      display: block; margin-top: .34rem; font: 700 .52rem/1 var(--sans);
+      letter-spacing: .19em; text-transform: uppercase;
+    }
+    .site-nav { display: flex; align-items: center; flex-wrap: wrap; gap: clamp(.8rem, 3vw, 2rem); }
+    .site-nav a {
+      padding: .55rem 0; font-size: .87rem; font-weight: 700;
+      text-decoration: none; color: var(--muted);
+    }
+    .site-nav a[aria-current='page'], .site-nav a:hover {
+      color: var(--pine); text-decoration: underline; text-decoration-color: var(--rust);
+    }
+    .site-nav .nav-index { padding: .48rem .82rem; border: 1px solid var(--line); border-radius: .3rem; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: .72rem 1rem; border-radius: .28rem; font-weight: 700;
+      background: var(--pine); color: var(--white); text-decoration: none;
+    }
+    .button:hover { background: #325745; }
+    .text-link { color: var(--pine); font-size: .9rem; font-weight: 700; }
+    .text-link:hover { color: var(--rust); }
+    .site-footer { background: var(--pine); color: #f4eddb; padding-block: 2rem; --focus: #ffe3b5; }
+    .footer-row { display: flex; justify-content: space-between; align-items: start; gap: 1rem; }
+    .footer-brand { font: 500 1.6rem/1.1 var(--serif); }
+    .footer-note { color: #dfdfcc; font-size: .85rem; margin-top: .38rem; }
+    .footer-row > a { font-size: .85rem; font-weight: 700; }
+    .credits { border-top: 1px solid #687768; margin-top: 1.3rem; padding-top: .9rem; font-size: .8rem; }
+    .credits summary { width: fit-content; cursor: pointer; font-weight: 700; }
+    .credits p, .credits ul { margin-top: .65rem; }
+    @media (max-width: 40rem) {
+      .shell { width: calc(100% - 2rem); }
+      .header-inner { min-height: 4.15rem; padding-block: .55rem; column-gap: .6rem; }
+      .site-nav .nav-index { display: none; }
+      .site-nav a { font-size: .82rem; }
+      .brand { font-size: 1.16rem; gap: .45rem; }
+      .brand img { width: 32px; height: 32px; }
+      .footer-row { align-items: baseline; }
+    }
+    /* Keep the same links and feedback when the visitor prefers less motion. */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition: none !important; }
+    }
+
+    .hero { position: relative; isolation: isolate; color: var(--white); background: #243d38; }
+    .hero-photo, .hero::after { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hero-photo { z-index: -2; object-fit: cover; object-position: center 43%; }
+    /* The scrim separates the words from the photograph without baking in the text. */
+    .hero::after {
+      content: ''; z-index: -1;
+      background: linear-gradient(90deg, #102822ef, #102822ac 39%, #10282208 87%),
+        linear-gradient(0deg, #102822aa, transparent 42%);
+    }
+    .hero-inner {
+      position: relative; min-height: 30rem; padding-block: 3.5rem 4rem;
+      display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+    }
+    .hero .eyebrow { color: #f6dbac; display: flex; align-items: center; gap: .7rem; }
+    .hero .eyebrow::before { content: ''; width: 1.5rem; height: 1px; background: currentColor; }
+    .hero h1 { font-size: clamp(3.15rem, 6.8vw, 6.25rem); line-height: .96; color: inherit; }
+    .hero h1 { margin-block: 1.12rem 1rem; letter-spacing: -.05em; }
+    .hero h1 em { color: #f1dfbb; }
+    .hero-deck { max-width: 30rem; color: #fcf4e5; font-size: clamp(.97rem, 2vw, 1.09rem); }
+    .hero .button { margin-top: 1.25rem; background: #f4e7cc; color: #1c392e; --focus: #fff1cf; }
+    .hero .button:hover { background: #fff9eb; }
+    .cover-label {
+      position: absolute; right: 0; bottom: 1.7rem;
+      display: grid; gap: .12rem; text-align: right; color: #fff9ed;
+      background: #152a24d9; border-left: 1px solid #e9d1a8; padding: .35rem .65rem;
+    }
+    .cover-label small { font-size: .61rem; font-weight: 700; letter-spacing: .16em; }
+    .cover-label span { font: 500 1rem/1.3 var(--serif); }
+    .destination-index { padding-block: clamp(2.4rem, 5vw, 4.8rem) 4.5rem; }
+    .section-intro {
+      display: flex; justify-content: space-between; align-items: end; gap: 1rem 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-intro h2 { font-size: clamp(2.15rem, 4.35vw, 3.65rem); margin-top: .32rem; }
+    .section-intro > p { max-width: 22rem; color: var(--muted); }
+
+    /* The circles follow the reference sequence; each tint repeats in its region panel. */
+    .europe { --region: #a23e2f; --region-tint: #f7ebe4; }
+    .asia { --region: #35618a; --region-tint: #eaf0f5; }
+    .america { --region: #356347; --region-tint: #ebf0e7; }
+    .africa { --region: #905411; --region-tint: #f8eddb; }
+    .atlas-browser { --region-offset: 7rem; }
+    .region-nav {
+      position: sticky; top: .5rem; z-index: 2; display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .36rem;
+      padding: .42rem; background: var(--white); border: 1px solid var(--line);
+      border-radius: .65rem; box-shadow: 0 7px 24px #242d270e;
+    }
+    .region-block {
+      display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center;
+      gap: clamp(.5rem, 1.25vw, .9rem); padding: .64rem clamp(.45rem, 1.3vw, .85rem);
+      border-radius: .45rem; color: var(--pine); text-decoration: none;
+    }
+    .region-block:focus-visible { outline-offset: -2px; }
+    .block-number {
+      display: grid; place-items: center; width: 3.35rem; height: 3.35rem;
+      border-radius: 50%; background: var(--region); color: #fffaf1;
+      font: 500 1.78rem/1 var(--serif); font-variant-numeric: lining-nums;
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .region-block:is(:hover, :focus-visible) { background: var(--region-tint); }
+    .region-block:is(:hover, :focus-visible) .block-number {
+      transform: translateY(-3px); box-shadow: 0 5px 10px #242d2730;
+    }
+    .block-info { display: grid; gap: .14rem; }
+    .block-name { font: 600 clamp(1.01rem, 1.6vw, 1.37rem)/1.15 var(--serif); }
+    .block-count { font-size: .74rem; color: var(--muted); }
+    .directory { margin-top: 1.15rem; }
+    .directory-head {
+      display: flex; justify-content: space-between; align-items: baseline; gap: .5rem 1rem;
+      padding: .35rem 0 .72rem; border-bottom: 1px solid var(--line); margin-bottom: .85rem;
+    }
+    .directory-head h2 { font-size: clamp(1.27rem, 2.4vw, 1.66rem); }
+    .directory-head p { color: var(--muted); font-size: .8rem; }
+    .region-grid { display: grid; gap: 1rem; }
+    .region-panel {
+      scroll-margin-top: var(--region-offset);
+      display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+      gap: clamp(1rem, 5vw, 4.4rem); padding: clamp(1.15rem, 3vw, 2.35rem);
+      border: 1px solid var(--line); border-left: .29rem solid var(--region);
+      border-radius: .5rem; background: var(--white);
+    }
+    .region-panel:target { border-color: var(--region); box-shadow: 0 0 0 1px var(--region); }
+    .destination-label {
+      display: block; margin-bottom: .46rem; color: var(--region);
+      font: 700 .77rem/1.3 var(--sans); letter-spacing: .14em; text-transform: uppercase;
+    }
+    .region-brief h3 { font-size: clamp(2.5rem, 6vw, 4.25rem); letter-spacing: -.026em; }
+    .panel-meta {
+      display: inline-block; margin-top: .8rem; padding: .17rem .55rem; border-radius: .23rem;
+      background: var(--region-tint); color: var(--pine); font-size: .79rem; font-weight: 700;
+    }
+    .country-list { margin: 0; padding-left: 1.48rem; }
+    .country-list > li { padding: .05rem 0 .65rem .2rem; }
+    .country-list > li + li { padding-top: .65rem; border-top: 1px solid #e8e4d6; }
+    .country-list > li:last-child { padding-bottom: 0; }
+    .country-list > li::marker { font-weight: 700; color: var(--region); }
+    .country-list h4 { margin: 0 0 .13rem; color: var(--rust); font-size: 1.04rem; }
+    .city-list { padding-left: 1.18rem; list-style: circle; color: var(--muted); font-size: .93rem; }
+    .city-list li::marker { color: var(--region); }
+    .directory-return { margin-top: 1rem; }
+
+    /* Progressive enhancement: unsupported browsers leave all four anchor targets visible. */
+    @supports selector(:has(*)) {
+      .atlas-browser:not(:has(.region-panel:target)) .region-panel:not(.europe),
+      .atlas-browser:has(.region-panel:target) .region-panel:not(:target) { display: none; }
+      .atlas-browser:not(:has(.region-panel:target)) .region-block.europe,
+      .atlas-browser:has(#europe:target) .region-block.europe,
+      .atlas-browser:has(#asia:target) .region-block.asia,
+      .atlas-browser:has(#america:target) .region-block.america,
+      .atlas-browser:has(#africa:target) .region-block.africa { background: var(--region-tint); }
+      .atlas-browser:not(:has(.region-panel:target)) .region-block.europe .block-number,
+      .atlas-browser:has(#europe:target) .region-block.europe .block-number,
+      .atlas-browser:has(#asia:target) .region-block.asia .block-number,
+      .atlas-browser:has(#america:target) .region-block.america .block-number,
+      .atlas-browser:has(#africa:target) .region-block.africa .block-number {
+        outline: 1px solid var(--region); outline-offset: .22rem;
+      }
+    }
+    .stories-invite {
+      background: #ebe7d9; border: 1px solid #d7d0bb; border-radius: .4rem;
+      margin-top: 2.75rem; padding: clamp(1.1rem, 4vw, 2.1rem);
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem;
+    }
+    .stories-invite h2 { font-size: clamp(1.6rem, 3.4vw, 2.5rem); margin-top: .32rem; }
+    @media (max-width: 50rem) {
+      .hero-inner { min-height: 27rem; }
+      .section-intro { align-items: start; flex-direction: column; }
+    }
+    @media (max-width: 42rem) {
+      .region-block {
+        grid-template-columns: 1fr; justify-items: center; text-align: center;
+        gap: .42rem; padding: .57rem .18rem .47rem;
+      }
+      .block-number { width: 2.5rem; height: 2.5rem; font-size: 1.36rem; }
+      .block-name { font: 700 .76rem/1.2 var(--sans); }
+      .block-count { display: none; }
+    }
+    @media (max-width: 37rem) {
+      .hero-photo { object-position: 60% center; }
+      .hero::after { background: linear-gradient(90deg, #102822ef, #10282288),
+        linear-gradient(0deg, #102822ad, transparent 75%); }
+      .hero-inner { min-height: 26rem; padding-block: 2.75rem 4.75rem; }
+      .cover-label { bottom: .8rem; }
+      .region-panel { grid-template-columns: 1fr; gap: 1.25rem; }
+      .directory-head, .stories-invite { align-items: start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .region-block:is(:hover, :focus-visible) .block-number { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header" id="top">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html">
+        <img src="assets/compass.svg" width="41" height="41" alt="">
+        <span>Atlas &amp; Away<small>The travel journal</small></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="travel-stories.html">Travel Stories</a>
+        <a class="nav-index" href="#regions">Destinations <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" tabindex="-1">
+    <section class="hero" aria-labelledby="home-title">
+      <img class="hero-photo" src="assets/lake-misurina.webp"
+        srcset="assets/lake-misurina-compact.webp 860w, assets/lake-misurina.webp 1024w"
+        sizes="100vw" width="1024" height="683" fetchpriority="high" alt="">
+      <div class="shell hero-inner">
+        <p class="eyebrow">Issue 01 / The destination issue</p>
+        <h1 id="home-title">Go farther.<br><em>Look closer.</em></h1>
+        <p class="hero-deck">Four regions, twelve countries, and the cities in between.
+          Find your next stop, or take the scenic route through our travel stories.</p>
+        <a class="button" href="#regions">Explore destinations <span aria-hidden="true">↓</span></a>
+        <p class="cover-label"><small>On the cover</small><span>Lake Misurina, Italy</span></p>
+      </div>
+    </section>
+
+    <div class="shell destination-index">
+      <section id="regions" tabindex="-1" aria-labelledby="regions-title">
+        <div class="section-intro">
+          <div><p class="eyebrow">The destination index</p><h2 id="regions-title">Pick a region.</h2></div>
+          <p>Choose a number to jump to that region’s countries and places.</p>
+        </div>
+      </section>
+
+      <div class="atlas-browser">
+        <!-- A fragment link opens the destination without a script and can be bookmarked. -->
+        <nav class="region-nav" aria-label="Choose a destination region">
+          <a class="region-block europe" href="#europe">
+            <span class="block-number">1</span>
+            <span class="block-info">
+              <span class="block-name">Europe</span><span class="block-count">3 countries</span>
+            </span>
+          </a>
+          <a class="region-block asia" href="#asia">
+            <span class="block-number">2</span>
+            <span class="block-info">
+              <span class="block-name">Asia</span><span class="block-count">3 countries</span>
+            </span>
+          </a>
+          <a class="region-block america" href="#america">
+            <span class="block-number">3</span>
+            <span class="block-info">
+              <span class="block-name">America</span><span class="block-count">3 countries</span>
+            </span>
+          </a>
+          <a class="region-block africa" href="#africa">
+            <span class="block-number">4</span>
+            <span class="block-info">
+              <span class="block-name">Africa</span><span class="block-count">3 countries</span>
+            </span>
+          </a>
+        </nav>
+        <section class="directory" aria-labelledby="directory-title">
+          <div class="directory-head">
+            <h2 id="directory-title">Country &amp; place directory</h2>
+            <p>12 countries <span aria-hidden="true">·</span> 36 places</p>
+          </div>
+          <div class="region-grid">
+            <!-- Nest each place list inside its country item to preserve the relationship. -->
+            <section class="region-panel europe" id="europe" tabindex="-1"
+              aria-labelledby="europe-title">
+              <div class="region-brief">
+                <h3 id="europe-title">
+                  <span class="destination-label">Destination 1:</span> Europe
+                </h3>
+                <p class="panel-meta">3 countries · 9 places</p>
+              </div>
+              <ol class="country-list">
+                <li><h4>France</h4>
+                  <ul class="city-list">
+                    <li>Paris</li><li>Nice</li><li>Marseille</li>
+                  </ul>
+                </li>
+                <li><h4>Italy</h4>
+                  <ul class="city-list">
+                    <li>Rome</li><li>Florence</li><li>Venice</li>
+                  </ul>
+                </li>
+                <li><h4>Greece</h4>
+                  <ul class="city-list">
+                    <li>Athens</li><li>Thessaloniki</li><li>Santorini</li>
+                  </ul>
+                </li>
+              </ol>
+            </section>
+            <section class="region-panel asia" id="asia" tabindex="-1"
+              aria-labelledby="asia-title">
+              <div class="region-brief">
+                <h3 id="asia-title">
+                  <span class="destination-label">Destination 2:</span> Asia
+                </h3>
+                <p class="panel-meta">3 countries · 9 places</p>
+              </div>
+              <ol class="country-list">
+                <li><h4>Japan</h4>
+                  <ul class="city-list">
+                    <li>Tokyo</li><li>Kyoto</li><li>Osaka</li>
+                  </ul>
+                </li>
+                <li><h4>China</h4>
+                  <ul class="city-list">
+                    <li>Beijing</li><li>Shanghai</li><li>Xi'an</li>
+                  </ul>
+                </li>
+                <li><h4>India</h4>
+                  <ul class="city-list">
+                    <li>New Delhi</li><li>Mumbai</li><li>Jaipur</li>
+                  </ul>
+                </li>
+              </ol>
+            </section>
+            <section class="region-panel america" id="america" tabindex="-1"
+              aria-labelledby="america-title">
+              <div class="region-brief">
+                <h3 id="america-title">
+                  <span class="destination-label">Destination 3:</span> America
+                </h3>
+                <p class="panel-meta">3 countries · 9 places</p>
+              </div>
+              <ol class="country-list">
+                <li><h4>USA</h4>
+                  <ul class="city-list">
+                    <li>New York City</li><li>Los Angeles</li><li>Chicago</li>
+                  </ul>
+                </li>
+                <li><h4>Brazil</h4>
+                  <ul class="city-list">
+                    <li>Rio de Janeiro</li><li>São Paulo</li><li>Salvador</li>
+                  </ul>
+                </li>
+                <li><h4>Canada</h4>
+                  <ul class="city-list">
+                    <li>Toronto</li><li>Vancouver</li><li>Montreal</li>
+                  </ul>
+                </li>
+              </ol>
+            </section>
+            <section class="region-panel africa" id="africa" tabindex="-1"
+              aria-labelledby="africa-title">
+              <div class="region-brief">
+                <h3 id="africa-title">
+                  <span class="destination-label">Destination 4:</span> Africa
+                </h3>
+                <p class="panel-meta">3 countries · 9 places</p>
+              </div>
+              <ol class="country-list">
+                <li><h4>South Africa</h4>
+                  <ul class="city-list">
+                    <li>Cape Town</li><li>Johannesburg</li><li>Durban</li>
+                  </ul>
+                </li>
+                <li><h4>Egypt</h4>
+                  <ul class="city-list">
+                    <li>Cairo</li><li>Luxor</li><li>Sharm El Sheikh</li>
+                  </ul>
+                </li>
+                <li><h4>Morocco</h4>
+                  <ul class="city-list">
+                    <li>Marrakech</li><li>Casablanca</li><li>Fez</li>
+                  </ul>
+                </li>
+              </ol>
+            </section>
+          </div>
+        </section>
+      </div>
+      <p class="directory-return"><a class="text-link" href="#regions">Back to region numbers ↑</a></p>
+
+      <section class="stories-invite" aria-labelledby="invite-title">
+        <div>
+          <p class="eyebrow">From the journal</p>
+          <h2 id="invite-title">Three landmarks, three stories.</h2>
+        </div>
+        <a class="button" href="travel-stories.html">Read travel stories <span aria-hidden="true">↗</span></a>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="shell">
+      <div class="footer-row">
+        <div><p class="footer-brand">Atlas &amp; Away</p><p class="footer-note">A travel journal for curious readers.</p></div>
+        <a href="#top">Back to top ↑</a>
+      </div>
+      <details class="credits">
+        <summary>Photo credits</summary>
+        <p><a href="https://www.flickr.com/photos/8749778@N06/52638023347">Lake Misurina - Sunrise Hitting Mountains</a> by Eric Kilby,
+            <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a>. Resized and displayed with a crop.</p>
+      </details>
+    </div>
+  </footer>
+</body>
+</html>
