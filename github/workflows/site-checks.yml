@@ -1,0 +1,16 @@
+name: Site checks
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  structure-and-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Verify local links and assignment structure
+        run: python3 tools/check_site.py
