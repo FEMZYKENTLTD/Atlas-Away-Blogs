@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 310" width="1200" height="310" role="img" aria-labelledby="title description">
+  <title id="title">Atlas &amp; Away | The Travel Journal</title>
+  <desc id="description">Four regions, three landmarks, and two HTML pages. A compass illustration sits on a deep green background.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#152c24"/><stop offset="1" stop-color="#345747"/>
+    </linearGradient>
+    <pattern id="map" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0v36" fill="none" stroke="#dbceb0" stroke-opacity=".09"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="310" rx="23" fill="url(#paper)"/>
+  <rect x="15" y="15" width="1170" height="280" rx="13" fill="url(#map)" stroke="#d9bd89" stroke-opacity=".52"/>
+  <g fill="none" stroke="#f3d9ab" stroke-opacity=".26">
+    <path d="M820 291c-113-90-78-179 9-245m25 245c-100-54-111-159-28-226m22 226c-86-60-78-137-11-201"/>
+    <path d="M1178 108c-65-63-150-67-177-26-16 25 40 37 76 82 43 55-31 75-20 128m121-154c-78-66-135-54-151-35-15 17 38 38 65 74 56 74-19 79-10 115"/>
+  </g>
+  <g transform="translate(970 150)">
+    <circle r="93" fill="#203c32" stroke="#ebd3a2" stroke-opacity=".7"/>
+    <circle r="78" fill="none" stroke="#ebd3a2" stroke-opacity=".35" stroke-dasharray="1 4"/>
+    <path d="M0-66v132M-66 0H66M-47-47l94 94m0-94-94 94" stroke="#dbbd87" stroke-opacity=".26"/>
+    <path d="M38-52L15 16-55 43l25-57z" fill="#eeddb8"/>
+    <path d="M-30-14L15 16-55 43z" fill="#af956a"/>
+    <circle r="5" fill="#243d32" stroke="#eeddb8"/>
+    <g fill="#f5e4c2" font-family="Arial, sans-serif" font-weight="bold" font-size="12" text-anchor="middle">
+      <text y="-103">N</text><text y="113">S</text><text x="106" y="4">E</text><text x="-106" y="4">W</text>
+    </g>
+  </g>
+  <path d="M70 73h36" stroke="#e2c388" stroke-width="2"/>
+  <text x="119" y="78" fill="#efd6a6" font-family="Arial, sans-serif" font-size="13" font-weight="bold" letter-spacing="4">THE TRAVEL JOURNAL  /  ISSUE 01</text>
+  <text x="67" y="178" fill="#fff7e5" font-family="Georgia, serif" font-size="87" letter-spacing="-3">Atlas &amp; Away</text>
+  <text x="73" y="221" fill="#f0e7d5" font-family="Arial, sans-serif" font-size="21">Four regions. Three landmarks. Two HTML pages.</text>
+  <text x="74" y="263" fill="#dbc59d" font-family="Arial, sans-serif" font-size="12" font-weight="bold" letter-spacing="3">CS 2205  /  UNIT 02</text>
+  <g stroke="#e9d7b2" stroke-width=".7">
+    <circle cx="730" cy="262" r="6" fill="#a23e2f"/><circle cx="750" cy="262" r="6" fill="#35618a"/>
+    <circle cx="770" cy="262" r="6" fill="#356347"/><circle cx="790" cy="262" r="6" fill="#905411"/>
+  </g>
+</svg>
